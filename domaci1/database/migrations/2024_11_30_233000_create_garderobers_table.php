@@ -15,7 +15,14 @@ return new class extends Migration
     {
         Schema::create('garderobers', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('naziv'); // Naziv garderobera (npr. "Zimska odeća")
+            $table->text('opis')->nullable(); // Opis garderobera, opciono
+            $table->unsignedBigInteger('user_id'); // Strani ključ za korisnika
+            $table->timestamps(); // Kolone "created_at" i "updated_at"
+
+            // Definisanje stranog ključa koji povezuje garderober sa korisnikom
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+           
         });
     }
 
