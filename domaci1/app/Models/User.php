@@ -47,4 +47,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function garderoberi()
+    {
+        return $this->hasMany(Garderober::class);
+    }
+
+    public function planoviOutfita()
+    {
+        return $this->hasMany(PlanOutfita::class);
+    }
 }

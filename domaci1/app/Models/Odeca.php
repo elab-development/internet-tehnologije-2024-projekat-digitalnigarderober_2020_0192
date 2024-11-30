@@ -17,4 +17,13 @@ class Odeca extends Model
         'slika',
         'garderober_id',
     ];
+    public function garderober()
+    {
+        return $this->belongsTo(Garderober::class);
+    }
+
+    public function planoviOutfita()
+    {
+        return $this->belongsToMany(PlanOutfita::class, 'outfit_plan_clothing_item');
+    }
 }

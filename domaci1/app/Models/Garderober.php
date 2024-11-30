@@ -15,6 +15,14 @@ class Garderober extends Model
         'user_id',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-    
+    public function odeca()
+    {
+        return $this->hasMany(Odeca::class);
+    }
+
 }
