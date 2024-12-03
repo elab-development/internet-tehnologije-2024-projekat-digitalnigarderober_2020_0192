@@ -18,10 +18,16 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
+            'ime' => fake()->firstName(),
+            'prezime' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
+            'password' => bcrypt('password'), // generisanje hashovane lozinke
+            'avatar' => fake()->imageUrl(200, 200, 'people'), // nasumična slika avatara
+            'datum_rodjenja' => fake()->date(),
+            'telefon' => fake()->phoneNumber(),
+            'adresa' => fake()->address(),
+            'biografija' => fake()->text(200), // kratka biografija
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ];
     }
