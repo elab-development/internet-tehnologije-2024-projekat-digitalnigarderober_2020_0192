@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model; // Promenjeno iz Pivot u Model
 
-class PlanOutfita extends Pivot
+class PlanOutfita extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'naziv',
         'datum',
@@ -14,6 +17,7 @@ class PlanOutfita extends Pivot
         'dogadjaj',
         'user_id',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -23,6 +27,4 @@ class PlanOutfita extends Pivot
     {
         return $this->belongsToMany(Odeca::class, 'outfit_plan_clothing_item');
     }
-
-
 }
