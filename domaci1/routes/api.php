@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GarderoberController;
 use App\Http\Controllers\OdecaController;
+use App\Http\Controllers\PlanOutfitaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/garderoberi', [GarderoberController::class, 'store']);
     Route::put('/garderoberi/{id}', [GarderoberController::class, 'update']);
     Route::delete('/garderoberi/{id}', [GarderoberController::class, 'destroy']);
+
+
+    Route::resource('plan-outfita', PlanOutfitaController::class);
 });
 
  
