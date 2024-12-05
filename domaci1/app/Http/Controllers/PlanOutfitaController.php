@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PlanOutfita;
 use App\Http\Resources\PlanOutfitaResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class PlanOutfitaController extends Controller
@@ -35,8 +36,7 @@ class PlanOutfitaController extends Controller
         $validator = Validator::make($request->all(), [
             'naziv' => 'required|string|max:255',
             'datum' => 'required|date',
-            'lokacija' => 'nullable|string|max:255',
-            'vremenska_prognoza' => 'nullable|string|max:255',
+            'lokacija' => 'required|string|max:255', // Lokacija je obavezna za vremensku prognozu
             'dogadjaj' => 'nullable|string|max:255',
         ]);
 
@@ -44,11 +44,14 @@ class PlanOutfitaController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Dohvaćanje vremenske prognoze
+        $vremenska_prognoza = $this->getWeatherForecast($request->lokacija);
+
         $plan = PlanOutfita::create([
             'naziv' => $request->naziv,
             'datum' => $request->datum,
             'lokacija' => $request->lokacija,
-            'vremenska_prognoza' => $request->vremenska_prognoza,
+            'vremenska_prognoza' => $vremenska_prognoza,
             'dogadjaj' => $request->dogadjaj,
             'user_id' => auth()->id(),
         ]);
@@ -66,8 +69,7 @@ class PlanOutfitaController extends Controller
         $validator = Validator::make($request->all(), [
             'naziv' => 'required|string|max:255',
             'datum' => 'required|date',
-            'lokacija' => 'nullable|string|max:255',
-            'vremenska_prognoza' => 'nullable|string|max:255',
+            'lokacija' => 'required|string|max:255', // Lokacija je obavezna za vremensku prognozu
             'dogadjaj' => 'nullable|string|max:255',
         ]);
 
@@ -75,7 +77,16 @@ class PlanOutfitaController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $plan->update($request->only(['naziv', 'datum', 'lokacija', 'vremenska_prognoza', 'dogadjaj']));
+        // Dohvaćanje vremenske prognoze
+        $vremenska_prognoza = $this->getWeatherForecast($request->lokacija);
+
+        $plan->update([
+            'naziv' => $request->naziv,
+            'datum' => $request->datum,
+            'lokacija' => $request->lokacija,
+            'vremenska_prognoza' => $vremenska_prognoza,
+            'dogadjaj' => $request->dogadjaj,
+        ]);
 
         return response()->json(new PlanOutfitaResource($plan));
     }
@@ -89,5 +100,30 @@ class PlanOutfitaController extends Controller
         $plan->delete();
 
         return response()->json(['message' => 'Plan outfita je uspešno obrisan.']);
+    }
+
+    /**
+     * Dohvaćanje vremenske prognoze iz OpenWeatherMap API-ja.
+     */
+    private function getWeatherForecast($lokacija)
+    {
+        try {
+            $apiKey = env('OPENWEATHER_API_KEY');
+            $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
+                'q' => $lokacija,
+                'appid' => $apiKey,
+                'units' => 'metric',
+                'lang' => 'en',
+            ]);
+
+            if ($response->ok()) {
+                $data = $response->json();
+                return "Temperature: {$data['main']['temp']}°C, Weather: {$data['weather'][0]['description']}";
+            }
+
+            return 'N/A';
+        } catch (\Exception $e) {
+            return 'N/A';
+        }
     }
 }
