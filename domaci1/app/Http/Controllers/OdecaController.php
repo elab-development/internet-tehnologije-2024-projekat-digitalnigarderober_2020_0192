@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Odeca;
 use App\Http\Resources\OdecaResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class OdecaController extends Controller
@@ -44,7 +45,7 @@ class OdecaController extends Controller
             'boja' => 'required|string|max:255',
             'sezona' => 'required|string|max:255',
             'materijal' => 'nullable|string|max:255',
-            'slika' => 'nullable|url',
+            'slika' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Validacija za sliku
             'garderober_id' => 'required|exists:garderoberi,id',
         ]);
 
@@ -52,7 +53,14 @@ class OdecaController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $odeca = Odeca::create($request->all());
+        $data = $request->all();
+
+        // Upload slike
+        if ($request->hasFile('slika')) {
+            $data['slika'] = $request->file('slika')->store('slike', 'public'); // Čuva sliku u storage/app/public/slike
+        }
+
+        $odeca = Odeca::create($data);
 
         return response()->json(new OdecaResource($odeca), 201);
     }
@@ -72,7 +80,7 @@ class OdecaController extends Controller
             'boja' => 'required|string|max:255',
             'sezona' => 'required|string|max:255',
             'materijal' => 'nullable|string|max:255',
-            'slika' => 'nullable|url',
+            'slika' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Validacija za sliku
             'garderober_id' => 'required|exists:garderoberi,id',
         ]);
 
@@ -80,7 +88,19 @@ class OdecaController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $odeca->update($request->all());
+        $data = $request->all();
+
+        // Provera i upload nove slike
+        if ($request->hasFile('slika')) {
+            // Brišemo staru sliku ako postoji
+            if ($odeca->slika && Storage::exists('public/' . $odeca->slika)) {
+                Storage::delete('public/' . $odeca->slika);
+            }
+
+            $data['slika'] = $request->file('slika')->store('slike', 'public'); // Čuva novu sliku
+        }
+
+        $odeca->update($data);
 
         return response()->json(new OdecaResource($odeca));
     }
@@ -93,6 +113,11 @@ class OdecaController extends Controller
         $odeca = Odeca::whereHas('garderober', function ($query) {
             $query->where('user_id', auth()->id());
         })->findOrFail($id);
+
+        // Brišemo sliku iz storage-a ako postoji
+        if ($odeca->slika && Storage::exists('public/' . $odeca->slika)) {
+            Storage::delete('public/' . $odeca->slika);
+        }
 
         $odeca->delete();
 
