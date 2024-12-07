@@ -22,8 +22,11 @@ class Odeca extends Model
         return $this->belongsTo(Garderober::class);
     }
 
+ 
     public function planoviOutfita()
     {
-        return $this->belongsToMany(PlanOutfita::class, 'outfit_plan_clothing_item');
+        return $this->belongsToMany(PlanOutfita::class, 'outfit_plan_clothing_item', 'clothing_item_id', 'plan_outfit_id');
     }
+    
+
 }

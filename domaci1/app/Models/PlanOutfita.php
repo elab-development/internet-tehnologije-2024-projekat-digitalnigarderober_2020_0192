@@ -22,9 +22,10 @@ class PlanOutfita extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+ 
     public function odeca()
     {
-        return $this->belongsToMany(Odeca::class, 'outfit_plan_clothing_item');
+        return $this->belongsToMany(Odeca::class, 'outfit_plan_clothing_item', 'plan_outfit_id', 'clothing_item_id');
     }
+    
 }

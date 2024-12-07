@@ -109,7 +109,7 @@ class PlanOutfitaController extends Controller
     {
         try {
             //https://www.weatherapi.com/
-            $apiKey ="8a1f9c9a5564423ba3e122001240712"; // Potrebno dodati u .env fajl
+            $apiKey ="8a1f9c9a5564423ba3e122001240712"; 
 
             // Primer poziva: https://api.weatherapi.com/v1/current.json?key=API_KEY&q=Belgrade&aqi=no
             $weatherResponse = Http::get("https://api.weatherapi.com/v1/current.json", [

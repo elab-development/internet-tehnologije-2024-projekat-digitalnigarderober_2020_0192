@@ -46,7 +46,7 @@ class OdecaController extends Controller
             'sezona' => 'required|string|max:255',
             'materijal' => 'nullable|string|max:255',
             'slika' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Validacija za sliku
-            'garderober_id' => 'required|exists:garderoberi,id',
+            'garderober_id' => 'required|exists:garderobers,id',
         ]);
 
         if ($validator->fails()) {
@@ -81,7 +81,7 @@ class OdecaController extends Controller
             'sezona' => 'required|string|max:255',
             'materijal' => 'nullable|string|max:255',
             'slika' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Validacija za sliku
-            'garderober_id' => 'required|exists:garderoberi,id',
+            'garderober_id' => 'required|exists:garderobers,id',
         ]);
 
         if ($validator->fails()) {

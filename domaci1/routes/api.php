@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GarderoberController;
 use App\Http\Controllers\OdecaController;
 use App\Http\Controllers\PlanOutfitaController;
+use App\Http\Controllers\PlanOutfitaOdecaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,23 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/garderoberi/{id}', [GarderoberController::class, 'destroy']);
 
 
-    Route::resource('plan-outfita', PlanOutfitaController::class);
-});
+   
+
+
+      // Dodavanje odeće u plan outfita
+      Route::post('/planoutfita/{planOutfitId}/add-clothing-item', [PlanOutfitaOdecaController::class, 'addClothingItem']);
+    
+      // Brisanje odeće iz plana outfita
+      Route::delete('/planoutfita/{planOutfitId}/remove-clothing-item/{clothingItemId}', [PlanOutfitaOdecaController::class, 'removeClothingItem']);
+      
+      // Prikaz svih komada odeće u planu outfita
+      Route::get('/planoutfita/{planOutfitId}/clothing-items', [PlanOutfitaOdecaController::class, 'showClothingItems']);
+
+
+      Route::resource('plan-outfita', PlanOutfitaController::class);
+
+    });
+
+ 
 
  
