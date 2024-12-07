@@ -36,7 +36,7 @@ class PlanOutfitaController extends Controller
         $validator = Validator::make($request->all(), [
             'naziv' => 'required|string|max:255',
             'datum' => 'required|date',
-            'lokacija' => 'required|string|max:255', // Lokacija je obavezna za vremensku prognozu
+            'lokacija' => 'required|string|max:255',
             'dogadjaj' => 'nullable|string|max:255',
         ]);
 
@@ -69,7 +69,7 @@ class PlanOutfitaController extends Controller
         $validator = Validator::make($request->all(), [
             'naziv' => 'required|string|max:255',
             'datum' => 'required|date',
-            'lokacija' => 'required|string|max:255', // Lokacija je obavezna za vremensku prognozu
+            'lokacija' => 'required|string|max:255',
             'dogadjaj' => 'nullable|string|max:255',
         ]);
 
@@ -103,26 +103,38 @@ class PlanOutfitaController extends Controller
     }
 
     /**
-     * Dohvaćanje vremenske prognoze iz OpenWeatherMap API-ja.
+     * Dohvaćanje vremenske prognoze pomoću WeatherAPI.
      */
     private function getWeatherForecast($lokacija)
     {
         try {
-            $apiKey = env('OPENWEATHER_API_KEY');
-            $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
+            //https://www.weatherapi.com/
+            $apiKey ="8a1f9c9a5564423ba3e122001240712"; // Potrebno dodati u .env fajl
+
+            // Primer poziva: https://api.weatherapi.com/v1/current.json?key=API_KEY&q=Belgrade&aqi=no
+            $weatherResponse = Http::get("https://api.weatherapi.com/v1/current.json", [
+                'key' => $apiKey,
                 'q' => $lokacija,
-                'appid' => $apiKey,
-                'units' => 'metric',
-                'lang' => 'en',
+                'aqi' => 'no'
             ]);
 
-            if ($response->ok()) {
-                $data = $response->json();
-                return "Temperature: {$data['main']['temp']}°C, Weather: {$data['weather'][0]['description']}";
+            \Log::info('WeatherAPI Response:', [
+                'status' => $weatherResponse->status(),
+                'body' => $weatherResponse->body(),
+            ]);
+
+            if ($weatherResponse->ok()) {
+                $data = $weatherResponse->json();
+                if (isset($data['current'])) {
+                    $temp = $data['current']['temp_c'];
+                    $description = $data['current']['condition']['text'];
+                    return "Temperatura: {$temp}°C, Vreme: {$description}";
+                }
             }
 
             return 'N/A';
         } catch (\Exception $e) {
+            \Log::error('Weather API Error', ['message' => $e->getMessage()]);
             return 'N/A';
         }
     }
