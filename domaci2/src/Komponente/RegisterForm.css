@@ -163,6 +163,24 @@
     background: linear-gradient(90deg, #b19cd9, #ffa7c4);
     transition: width 0.3s ease;
   }
+  .password-row {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+  }
+  .toggle-password:hover {
+    color: #333;
+  }
   
   /* Responsive */
   @media (max-width: 480px) {

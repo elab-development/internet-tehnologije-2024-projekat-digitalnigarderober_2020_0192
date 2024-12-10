@@ -22,6 +22,7 @@ const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessages, setErrorMessages] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const totalSteps = 3;
 
@@ -31,7 +32,7 @@ const RegisterForm = () => {
   };
 
   const handleNext = () => {
-    if (currentStep < totalSteps) {
+    if (validateStep(currentStep)) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -42,14 +43,37 @@ const RegisterForm = () => {
     }
   };
 
+  const validateStep = (step) => {
+    const errors = {};
+    if (step === 1) {
+      if (!formData.ime) errors.ime = 'Ime je obavezno.';
+      if (!formData.prezime) errors.prezime = 'Prezime je obavezno.';
+      if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.email = 'Unesite validnu e-mail adresu.';
+      }
+    }
+    if (step === 2) {
+      if (!formData.password || formData.password.length < 8) {
+        errors.password = 'Lozinka mora imati najmanje 8 karaktera.';
+      }
+      if (formData.password !== formData.password_confirmation) {
+        errors.password_confirmation = 'Lozinke se ne podudaraju.';
+      }
+    }
+    setErrorMessages(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateStep(currentStep)) return;
+
     setLoading(true);
     setErrorMessages({});
     setSuccessMessage('');
 
     try {
-      const response = await axios.post('/api/register', formData);
+      const response = await axios.post('http://127.0.0.1:8000/api/register', formData);
       setSuccessMessage('Registracija uspješna! Dobro došli.');
       setLoading(false);
     } catch (error) {
@@ -87,6 +111,7 @@ const RegisterForm = () => {
                   name="ime" 
                   value={formData.ime} 
                   onChange={handleChange} 
+                  required
                 />
                 {errorMessages.ime && <div className="error-message">{errorMessages.ime}</div>}
               </div>
@@ -97,6 +122,7 @@ const RegisterForm = () => {
                   name="prezime" 
                   value={formData.prezime} 
                   onChange={handleChange} 
+                  required
                 />
                 {errorMessages.prezime && <div className="error-message">{errorMessages.prezime}</div>}
               </div>
@@ -108,6 +134,7 @@ const RegisterForm = () => {
                   name="email" 
                   value={formData.email} 
                   onChange={handleChange} 
+                  required
                 />
                 {errorMessages.email && <div className="error-message">{errorMessages.email}</div>}
               </div>
@@ -116,25 +143,37 @@ const RegisterForm = () => {
 
           {currentStep === 2 && (
             <>
-              <div className="form-row">
+              <div className="form-row password-row">
                 <InputField 
                   label="Lozinka"
-                  type="password" 
+                  type={passwordVisible ? 'text' : 'password'} 
                   name="password" 
                   value={formData.password} 
                   onChange={handleChange} 
+                  required
                 />
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                >
+                  {passwordVisible ? 'Sakrij' : 'Prikaži'}
+                </button>
                 {errorMessages.password && <div className="error-message">{errorMessages.password}</div>}
               </div>
 
               <div className="form-row">
                 <InputField 
                   label="Potvrda Lozinke" 
-                  type="password" 
+                  type={passwordVisible ? 'text' : 'password'} 
                   name="password_confirmation" 
                   value={formData.password_confirmation} 
                   onChange={handleChange} 
+                  required
                 />
+                {errorMessages.password_confirmation && (
+                  <div className="error-message">{errorMessages.password_confirmation}</div>
+                )}
               </div>
 
               <div className="form-row">
