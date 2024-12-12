@@ -6,6 +6,7 @@ import RegisterForm from './Komponente/RegisterForm';
 import LoginForm from './Komponente/LoginForm';
 import Navbar from './Komponente/Navbar';
 import { AuthProvider } from './Komponente/AuthContext';
+import WardrobeList from './Komponente/WardrobeList';
  
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/mojgarderober" element={<WardrobeList />} />
           </Routes>
         </div>
       </Router>
