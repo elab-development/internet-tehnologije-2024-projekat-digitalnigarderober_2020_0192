@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useWardrobes from './useWardrobes';
 import './WardrobeList.css';
 
@@ -45,6 +46,9 @@ const WardrobeList = () => {
               <div className="wardrobe-info">
                 <h3 className="wardrobe-name">{wardrobe.naziv}</h3>
                 <p className="wardrobe-description">{wardrobe.opis}</p>
+                <Link to={`/garderober/${wardrobe.id}/odeca`} className="view-clothes-link">
+                  Prikaži odeću
+                </Link>
               </div>
               <button
                 className="delete-button"

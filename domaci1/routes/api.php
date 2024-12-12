@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
 
-
+    Route::get('/garderoberi/{id}/odeca', [OdecaController::class, 'getByWardrobe']);
     Route::get('/garderoberi', [GarderoberController::class, 'index']);
     Route::get('/garderoberi/{id}', [GarderoberController::class, 'show']);
     Route::post('/garderoberi', [GarderoberController::class, 'store']);

@@ -123,4 +123,20 @@ class OdecaController extends Controller
 
         return response()->json(['message' => 'Odeća je uspešno obrisana.']);
     }
+
+
+    /**
+     * Prikaz svih odeća za određeni garderober.
+     */
+    public function getByWardrobe($wardrobeId)
+    {
+        $odeca = Odeca::where('garderober_id', $wardrobeId)
+            ->whereHas('garderober', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
+
+        return response()->json(OdecaResource::collection($odeca));
+    }
+
 }
