@@ -45,4 +45,27 @@
   .delete-button:hover {
     background-color: #c0392b;
   }
+  .add-cloth-form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .add-cloth-form input,
+  .add-cloth-form button {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .add-cloth-form button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .add-cloth-form button:hover {
+    background-color: #45a049;
+  }
   

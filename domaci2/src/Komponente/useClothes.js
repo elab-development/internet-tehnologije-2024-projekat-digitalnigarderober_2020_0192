@@ -22,6 +22,20 @@ const useClothes = (wardrobeId) => {
     fetchClothes();
   }, [wardrobeId]);
 
+  const createCloth = async (newCloth) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      const response = await axios.post(`http://127.0.0.1:8000/api/odeca`, newCloth, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setClothes((prevClothes) => [...prevClothes, response.data]);
+    } catch (error) {
+      console.error('Greška prilikom kreiranja odeće:', error);
+    }
+  };
+
   const deleteCloth = async (clothId) => {
     try {
       const token = sessionStorage.getItem('token');
@@ -36,7 +50,7 @@ const useClothes = (wardrobeId) => {
     }
   };
 
-  return [clothes, setClothes, deleteCloth];
+  return [clothes, setClothes, createCloth, deleteCloth];
 };
 
 export default useClothes;
