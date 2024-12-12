@@ -5,7 +5,7 @@ import './ClothesList.css';
 
 const ClothesList = () => {
   const { id } = useParams();
-  const [clothes] = useClothes(id);
+  const [clothes, , deleteCloth] = useClothes(id);
 
   return (
     <section className="clothes-section">
@@ -19,6 +19,7 @@ const ClothesList = () => {
             <th>Boja</th>
             <th>Sezona</th>
             <th>Materijal</th>
+            <th>Akcije</th>
           </tr>
         </thead>
         <tbody>
@@ -37,11 +38,19 @@ const ClothesList = () => {
                 <td>{cloth.boja}</td>
                 <td>{cloth.sezona}</td>
                 <td>{cloth.materijal || 'N/A'}</td>
+                <td>
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteCloth(cloth.id)}
+                  >
+                    Obriši
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6">Nema odeće za prikaz.</td>
+              <td colSpan="7">Nema odeće za prikaz.</td>
             </tr>
           )}
         </tbody>

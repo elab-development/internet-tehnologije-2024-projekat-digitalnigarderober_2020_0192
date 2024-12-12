@@ -22,7 +22,21 @@ const useClothes = (wardrobeId) => {
     fetchClothes();
   }, [wardrobeId]);
 
-  return [clothes, setClothes];
+  const deleteCloth = async (clothId) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      await axios.delete(`http://127.0.0.1:8000/api/odeca/${clothId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setClothes((prevClothes) => prevClothes.filter((cloth) => cloth.id !== clothId));
+    } catch (error) {
+      console.error('Greška prilikom brisanja odeće:', error);
+    }
+  };
+
+  return [clothes, setClothes, deleteCloth];
 };
 
 export default useClothes;
