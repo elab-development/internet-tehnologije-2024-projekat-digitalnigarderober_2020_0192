@@ -5,19 +5,23 @@ import HomePage from './Komponente/HomePage';
 import RegisterForm from './Komponente/RegisterForm';
 import LoginForm from './Komponente/LoginForm';
 import Navbar from './Komponente/Navbar';
+import { AuthProvider } from './Komponente/AuthContext';
+ 
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-       <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/login" element={<LoginForm />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/register" element={<RegisterForm />} />
+            <Route path="/login" element={<LoginForm />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

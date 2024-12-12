@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import InputField from './InputField';
 import PrimaryButton from './PrimaryButton';
-import './RegisterForm.css'; // Koristimo postojeći CSS za konzistentan dizajn
+import './RegisterForm.css';
+import { AuthContext } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 
 const LoginForm = () => {
+  let navigate= useNavigate();
+  const { setUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: 'tijanajeremic@gmail.com',
     password: 'tijanajeremic',
@@ -16,7 +21,7 @@ const LoginForm = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setErrorMessages({});
   };
 
@@ -28,9 +33,13 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/login', formData);
+      const { access_token, user } = response.data; // Pretpostavljamo da API vraća token i podatke o korisniku
+
+      sessionStorage.setItem('token', access_token); // Čuvanje tokena
+      setUser(user); // Ažuriranje korisnika u globalnom stanju
       setSuccessMessage('Prijava uspešna! Dobro došli.');
       setLoading(false);
-      // Logika nakon uspešne prijave, npr. preusmeravanje
+      navigate('/mojgarderober')
     } catch (error) {
       setLoading(false);
       if (error.response && error.response.status === 401) {
@@ -52,7 +61,7 @@ const LoginForm = () => {
 
         <form onSubmit={handleSubmit} className="registration-form">
           <div className="form-row">
-            <InputField 
+            <InputField
               label="Email"
               type="email"
               name="email"
@@ -60,11 +69,10 @@ const LoginForm = () => {
               onChange={handleChange}
               required
             />
-            {errorMessages.email && <div className="error-message">{errorMessages.email}</div>}
           </div>
 
           <div className="form-row password-row">
-            <InputField 
+            <InputField
               label="Lozinka"
               type={passwordVisible ? 'text' : 'password'}
               name="password"
@@ -79,7 +87,6 @@ const LoginForm = () => {
             >
               {passwordVisible ? 'Sakrij' : 'Prikaži'}
             </button>
-            {errorMessages.password && <div className="error-message">{errorMessages.password}</div>}
           </div>
 
           <div className="button-row">
