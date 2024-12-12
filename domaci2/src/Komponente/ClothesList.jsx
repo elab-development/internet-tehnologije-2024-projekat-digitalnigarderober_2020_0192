@@ -4,7 +4,7 @@ import useClothes from './useClothes';
 import './ClothesList.css';
 
 const ClothesList = () => {
-  const { id } = useParams();  
+  const { id } = useParams();
   const [clothes] = useClothes(id);
 
   return (
@@ -13,6 +13,7 @@ const ClothesList = () => {
       <table className="clothes-table">
         <thead>
           <tr>
+            <th>Slika</th>
             <th>Naziv</th>
             <th>Tip</th>
             <th>Boja</th>
@@ -24,6 +25,13 @@ const ClothesList = () => {
           {clothes.length > 0 ? (
             clothes.map((cloth) => (
               <tr key={cloth.id}>
+                <td>
+                  {cloth.slika ? (
+                    <img src={cloth.slika} alt={cloth.naziv} className="cloth-image" />
+                  ) : (
+                    'Nema slike'
+                  )}
+                </td>
                 <td>{cloth.naziv}</td>
                 <td>{cloth.tip}</td>
                 <td>{cloth.boja}</td>
@@ -33,7 +41,7 @@ const ClothesList = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5">Nema odeće za prikaz.</td>
+              <td colSpan="6">Nema odeće za prikaz.</td>
             </tr>
           )}
         </tbody>

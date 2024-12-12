@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class OdecaResource extends JsonResource
 {
@@ -22,7 +23,7 @@ class OdecaResource extends JsonResource
             'boja' => $this->boja,
             'sezona' => $this->sezona,
             'materijal' => $this->materijal,
-            'slika' => $this->slika,
+            'slika' => $this->slika ? asset('storage/' . $this->slika) : null,  //prepravljeno za react comaci kako bismo mogli da prikazemo sliku na frontendu
         ];
     }
 }
