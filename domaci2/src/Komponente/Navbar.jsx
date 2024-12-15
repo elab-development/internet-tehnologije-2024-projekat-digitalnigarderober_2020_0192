@@ -33,7 +33,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">Digitalni Garderober</Link>
+        <Link to="/">Digitalni garderober</Link>
       </div>
       <ul className="navbar-links">
         <li>
@@ -49,11 +49,17 @@ const Navbar = () => {
             </li>
           </>
         ) : (
-          <li>
+          <>
+            <li>
+              <Link to="/mojgarderober">Moj garderober</Link>
+            </li>
+            <li>
             <button onClick={handleLogout} className="logout-button">
               Odjava
             </button>
-          </li>
+            </li>
+          </>
+        
         )}
       </ul>
     </nav>

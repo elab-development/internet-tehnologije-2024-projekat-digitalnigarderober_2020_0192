@@ -33,7 +33,7 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/login', formData);
-      const { access_token, user } = response.data; // Pretpostavljamo da API vraća token i podatke o korisniku
+      const { access_token, user } = response.data; 
 
       sessionStorage.setItem('token', access_token); // Čuvanje tokena
       setUser(user); // Ažuriranje korisnika u globalnom stanju

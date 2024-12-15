@@ -46,7 +46,7 @@ const HomePage = () => {
                   <div className="item-info">
                     <h3 className="item-name">Komad #{i + 1}</h3>
                     <p className="item-description">Ekskluzivan modni komad, savršen za posebne prilike</p>
-                    <button className="item-cta-button">Detalji</button>
+                  
                   </div>
                 </div>
               ))

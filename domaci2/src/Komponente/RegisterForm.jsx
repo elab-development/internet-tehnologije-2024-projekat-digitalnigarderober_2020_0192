@@ -3,8 +3,10 @@ import axios from 'axios';
 import InputField from './InputField';
 import PrimaryButton from './PrimaryButton';
 import './RegisterForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
+  let navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     ime: '',
@@ -74,7 +76,8 @@ const RegisterForm = () => {
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/register', formData);
-      setSuccessMessage('Registracija uspješna! Dobro došli.');
+      alert('Registracija uspešna! Dobro došli.');
+      navigate('/login')
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -89,7 +92,7 @@ const RegisterForm = () => {
   return (
     <div className="form-container">
       <div className="form-wrapper">
-        <h2 className="form-title">Kreiraj Nalog</h2>
+        <h2 className="form-title">Kreiraj nalog</h2>
         <p className="form-subtitle">Korak {currentStep} od {totalSteps}</p>
 
         <div className="progress-bar">
